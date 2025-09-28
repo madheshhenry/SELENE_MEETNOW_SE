@@ -3,140 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MeetNow - Video Conferencing</title>
+    <title>VideoMeet - Video Conferencing</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
 </head>
 <body>
-    <!-- Pre-meeting screen -->
-    <div id="preMeetingScreen" class="screen active">
+    <div class="container">
         <header>
-            <h1>MeetNow</h1>
-            <p>Secure peer-to-peer video conferencing</p>
-        </header>
-        
-        <div class="container">
-            <div class="card">
-                <h2>Start or join a meeting</h2>
-                
-                <div class="input-group">
-                    <input type="text" id="meetingCodeInput" placeholder="Enter meeting code">
-                    <button id="joinMeetingBtn" class="btn-primary">Join</button>
-                </div>
-                
-                <div class="divider">
-                    <span>OR</span>
-                </div>
-                
-                <button id="createMeetingBtn" class="btn-secondary">Create New Meeting</button>
-                
-                <div class="camera-preview" id="cameraPreview">
-                    <video id="previewVideo" autoplay muted></video>
-                    <div class="preview-overlay">
-                        <span>Camera Preview - Make sure camera is working</span>
-                    </div>
-                </div>
-                
-                <div class="features">
-                    <div class="feature">
-                        <span class="icon">🔒</span>
-                        <span>Secure & Encrypted</span>
-                    </div>
-                    <div class="feature">
-                        <span class="icon">👥</span>
-                        <span>Real Video Calls</span>
-                    </div>
-                    <div class="feature">
-                        <span class="icon">💬</span>
-                        <span>Real-time chat</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Meeting screen -->
-    <div id="meetingScreen" class="screen">
-        <header class="meeting-header">
-            <div class="meeting-info">
-                <span id="meetingCodeDisplay"></span>
-                <button id="copyMeetingCode" class="btn-small">Copy</button>
-                <span id="participantCount" class="participant-count">1 participant</span>
-            </div>
-            <div class="meeting-controls">
-                <button id="toggleChat" class="btn-small">💬 Chat</button>
-                <button id="toggleParticipants" class="btn-small">👥 Participants</button>
-                <button id="leaveMeeting" class="btn-danger">🚪 Leave</button>
+            <h1>🎥 VideoMeet</h1>
+            <div class="controls">
+                <button id="joinBtn" class="btn btn-primary">Join Meeting</button>
+                <button id="createBtn" class="btn btn-success">Create Meeting</button>
             </div>
         </header>
-        
+
         <div class="meeting-container">
             <div class="video-container">
-                <div id="videosContainer" class="videos-container">
-                    <!-- Local and remote videos will be added here -->
+                <div class="local-video">
+                    <video id="localVideo" autoplay muted></video>
+                    <div class="video-label">You</div>
+                </div>
+                <div class="remote-videos" id="remoteVideos">
+                    <!-- Remote videos will appear here -->
                 </div>
             </div>
-            
-            <div id="chatPanel" class="side-panel hidden">
-                <div class="panel-header">
-                    <h3>Chat</h3>
-                    <button id="closeChat" class="btn-close">×</button>
-                </div>
-                <div id="chatMessages" class="chat-messages">
-                    <div class="system-message">Meeting started. Share the meeting code with others!</div>
-                </div>
+
+            <div class="controls-bar">
+                <button id="micBtn" class="control-btn">🎤</button>
+                <button id="cameraBtn" class="control-btn">📹</button>
+                <button id="screenShareBtn" class="control-btn">🖥️</button>
+                <button id="hangupBtn" class="control-btn btn-danger">📞</button>
+            </div>
+
+            <div class="chat-container">
+                <div class="chat-messages" id="chatMessages"></div>
                 <div class="chat-input">
-                    <input type="text" id="messageInput" placeholder="Type a message..." maxlength="500">
-                    <button id="sendMessageBtn">Send</button>
-                </div>
-            </div>
-            
-            <div id="participantsPanel" class="side-panel hidden">
-                <div class="panel-header">
-                    <h3>Participants</h3>
-                    <button id="closeParticipants" class="btn-close">×</button>
-                </div>
-                <div id="participantsList" class="participants-list">
-                    <!-- Participants will be added here -->
+                    <input type="text" id="messageInput" placeholder="Type your message...">
+                    <button id="sendBtn">Send</button>
                 </div>
             </div>
         </div>
-        
-        <footer class="meeting-footer">
-            <div class="control-buttons">
-                <button id="toggleMic" class="control-btn active">
-                    <span class="icon">🎤</span>
-                    <span class="label">Mute</span>
-                </button>
-                <button id="toggleCamera" class="control-btn active">
-                    <span class="icon">📹</span>
-                    <span class="label">Stop Video</span>
-                </button>
-                <button id="shareScreen" class="control-btn">
-                    <span class="icon">🖥️</span>
-                    <span class="label">Share Screen</span>
-                </button>
-                <button id="toggleRecord" class="control-btn">
-                    <span class="icon">⏺️</span>
-                    <span class="label">Record</span>
-                </button>
-            </div>
-        </footer>
-    </div>
 
-    <!-- User Name Modal -->
-    <div id="userNameModal" class="modal">
-        <div class="modal-content">
-            <h3>Enter your name</h3>
-            <input type="text" id="userNameInput" placeholder="Your name" maxlength="20" value="User">
-            <div class="modal-buttons">
-                <button id="confirmUserName" class="btn-primary">Join Meeting</button>
+        <!-- Meeting ID Modal -->
+        <div id="meetingModal" class="modal">
+            <div class="modal-content">
+                <h3>Enter Meeting ID</h3>
+                <input type="text" id="meetingIdInput" placeholder="Meeting ID">
+                <button id="joinMeetingBtn">Join</button>
+                <button id="closeModalBtn">Cancel</button>
             </div>
         </div>
     </div>
 
-    <div id="statusMessage" class="status-message"></div>
-
-    <script src="app.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
